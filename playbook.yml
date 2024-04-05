@@ -1,17 +1,43 @@
 - hosts: germany
   tasks:
-    # The task name is optional
-    - name: install git
-      # Module name is indicated here, we use `apt` now to install package redis-server
+    # # The task name is optional
+    # - name: install git
+    #   # Module name is indicated here, we use `apt` now to install package redis-server
+    #   ansible.builtin.apt:
+    #     # Module params in indicated here
+    #     name: git
+    #     state: present
+    #     update_cache: yes
+    #   become: true
+    
+    # - name: remove git
+    #   ansible.builtin.apt:
+    #     name: git
+    #     state: absent
+    #   become: true
+
+    - name: update cache
       ansible.builtin.apt:
-        # Module params in indicated here
+        update_cache: true
+    - name: install git
+      ansible.builtin.apt:
         name: git
         state: present
-        update_cache: yes
       become: true
-    
-    - name: remove git
+    - name: install make
       ansible.builtin.apt:
-        name: git
-        state: absent
+        name: make
+        state: present
       become: true
+    - name: add the user arya
+      ansible.builtin.user:
+        name: arya
+      tags: users
+    - name: add the user alan
+      ansible.builtin.user:
+        name: alan
+      tags: users
+    - name: add the user vitya
+      ansible.builtin.user:
+        name: vitya
+      tags: users
