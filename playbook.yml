@@ -1,4 +1,8 @@
 - hosts: germany
+  vars:
+    nginx_port: 8080
+    conf_dir: /etc/nginx
+    html_dir: /usr/share/nginx/html
   tasks:
     - name: install nginx
       ansible.builtin.apt:
@@ -6,16 +10,16 @@
         state: latest
       become: yes
 
+    - name: update nginx conf
+      ansible.builtin.template:
+        src: ./files/nginx.conf
+        dest: "{{conf_dir}}/nginx.conf"
+      become: yes
+
     - name: update nginx index.html
       ansible.builtin.copy:
         src: ./files/index.html
-        dest: /usr/share/nginx/html/index.html
-      become: yes
-
-    - name: update nginx conf
-      ansible.builtin.copy:
-        src: ./files/nginx.conf
-        dest: /etc/nginx/nginx.conf
+        dest: "{{html_dir}}/index.html"
       notify:
         - restart nginx
       become: yes
