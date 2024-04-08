@@ -14,10 +14,12 @@
       ansible.builtin.template:
         src: ./files/nginx.conf
         dest: "{{conf_dir}}/nginx.conf"
+      notify:
+        - restart nginx
       become: yes
 
     - name: update nginx index.html
-      ansible.builtin.copy:
+      ansible.builtin.template:
         src: ./files/index.html
         dest: "{{html_dir}}/index.html"
       notify:
