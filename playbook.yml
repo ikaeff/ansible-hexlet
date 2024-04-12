@@ -1,18 +1,19 @@
 - hosts: germany
   vars:
-    server_name: "this is server {{ ansible_nodename }}"
     deploy_time: "{{ ansible_date_time['date'] }}"
   tasks:
-    - name: install nginx
+    - name: install cowsay
       ansible.builtin.apt:
-        name: nginx
+        name: cowsay
         state: present
+    - ansible.builtin.command: cowsay "This is server {{ ansible_nodename }}"
+      register: cowsay_result
     - name: add template
       ansible.builtin.template:
         src: ./files/index.html
         dest: /usr/share/nginx/html/index.html
       become: yes
-    - name: show server_name
+    - name: show cowsay_result
       ansible.builtin.debug:
-        msg: server_name={{ server_name }}
+        msg: server_name={{ cowsay_result }}
 
