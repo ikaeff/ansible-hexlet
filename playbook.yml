@@ -1,18 +1,18 @@
 - hosts: germany
-  gather_facts: no
   vars:
-    users:
-      - { name: jaime, email: jaime@example.com }
-      - { name: sansa, email: sansa@example.com }
-      - { name: robert, email: robert@example.com }
+    server_name: "this is server {{ ansible_nodename }}"
+    deploy_time: "{{ ansible_date_time['date'] }}"
   tasks:
-    - name: add users
-      ansible.builtin.user:
-        name: "{{ item.name }}"
+    - name: install nginx
+      ansible.builtin.apt:
+        name: nginx
         state: present
-      loop: "{{ users }}"
-    - name: add gitconfigs
+    - name: add template
       ansible.builtin.template:
-        src: ./files/base_gitconfig
-        dest: /home/{{ item.name }}/.gitconfig
-      loop: "{{ users }}"
+        src: ./files/index.html
+        dest: /usr/share/nginx/html/index.html
+      become: yes
+    - name: show server_name
+      ansible.builtin.debug:
+        msg: server_name={{ server_name }}
+
