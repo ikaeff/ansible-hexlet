@@ -1,8 +1,18 @@
 - hosts: germany
   gather_facts: no
+  vars:
+    users:
+      - { name: jaime, email: jaime@example.com }
+      - { name: sansa, email: sansa@example.com }
+      - { name: robert, email: robert@example.com }
   tasks:
-    - name: install git
-      ansible.builtin.apt:
-        name: git
-        state: latest
-      become: yes
+    - name: add users
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        state: present
+      loop: "{{ users }}"
+    - name: add gitconfigs
+      ansible.builtin.template:
+        src: ./files/base_gitconfig
+        dest: /home/{{ item.name }}/.gitconfig
+      loop: "{{ users }}"
